@@ -1,7 +1,14 @@
-from app.model.DriveFile import DriveFile
-from app.persistence.DriveFileDao import get_all_files, get_file, add_file, update_file, delete_file
+from app.model.drive_file import DriveFile
+from app.persistence.drive_file_dao import get_all_files, get_file, add_file, update_file, delete_file
+from app.utils.google_auth import GoogleDriveAuth
 
 class DriveFileService:
+    @staticmethod
+    def login_drive():
+        auth_instance = GoogleDriveAuth()
+        auth_instance.authenticate()
+        return auth_instance.drive
+
     @staticmethod
     def get_all_files():
         return get_all_files()

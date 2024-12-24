@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from app.model.user import User, Gender
-from app.service.UserService import UserService
+from app.service.user_service import UserService
 
 router = APIRouter()
 

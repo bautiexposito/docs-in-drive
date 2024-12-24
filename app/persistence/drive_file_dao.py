@@ -1,5 +1,5 @@
 from typing import List
-from app.model.DriveFile import DriveFile, Visibility
+from app.model.drive_file import DriveFile, Visibility
 
 db: List[DriveFile] = [
     DriveFile(

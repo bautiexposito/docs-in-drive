@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
-from app.model.DriveFile import DriveFile
-from app.service.DriveFileService import DriveFileService
+from app.model.drive_file import DriveFile
+from app.service.drive_file_service import DriveFileService
 
 router = APIRouter()
 
@@ -15,6 +15,14 @@ def get_file(file_id: int):
 @router.post("/", response_model=DriveFile)
 def create_file(file: DriveFile):
     return DriveFileService.create_file(file)
+
+@router.post("/login-drive", status_code=200)
+async def login_drive():
+    try:
+        drive_instance = DriveFileService.login_drive()
+        return {"message": "Autenticacion exitosa", "drive_instance": str(drive_instance)}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error al autenticar con Google Drive: {str(e)}")
 
 @router.put("/{file_id}", response_model=DriveFile)
 def update_file(file_id: int, file_data: DriveFile):

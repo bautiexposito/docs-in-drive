@@ -1,5 +1,5 @@
 from app.model.user import User
-from app.persistence.UserDao import get_all_users, get_user, add_user, update_user, delete_user
+from app.persistence.user_dao import get_all_users, get_user, add_user, update_user, delete_user
 
 class UserService:
     @staticmethod

@@ -1,7 +1,7 @@
 # uvicorn app.main:app --reload
 from fastapi import FastAPI
-from app.controller.UserController import router as user_router
-from app.controller.DriveFileController import router as driveFile_router
+from app.controller.user_controller import router as user_router
+from app.controller.drive_file_controller import router as driveFile_router
 
 app = FastAPI()
 
