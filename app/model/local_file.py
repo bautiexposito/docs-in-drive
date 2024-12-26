@@ -7,7 +7,7 @@ class Visibility(str, Enum):
     public = "public"
     private = "private"
 
-class DriveFile(BaseModel):
+class LocalFile(BaseModel):
     id: int
     id_drive: str
     name: str
