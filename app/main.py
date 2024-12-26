@@ -9,7 +9,7 @@ app = FastAPI()
 # Registrar rutas
 app.include_router(user_router, prefix="/api/v1/users", tags=["users"])
 app.include_router(localFile_router, prefix="/api/v1/local_files", tags=["localFiles"])
-app.include_router(driveFile_router, prefix="/api/v1/drive_files", tags=["driveFiles"])
+app.include_router(driveFile_router, prefix="/api/v1/drive", tags=["driveFiles"])
 
 @app.get("/")
 def root():

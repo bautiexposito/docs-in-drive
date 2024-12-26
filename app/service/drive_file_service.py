@@ -1,4 +1,6 @@
 from app.utils.google_auth import GoogleDriveAuth
+from app.model.local_file import Visibility
+from googleapiclient.errors import HttpError
 
 auth_instance = GoogleDriveAuth()
 
@@ -12,7 +14,7 @@ class DriveFileService:
     def get_files():
         drive = auth_instance.drive
         if not drive:
-            raise Exception("Google Drive authentication is required. Call login_drive() first.")
+            raise Exception("Debe autenticarse con Google Drive.")
 
         file_list = drive.ListFile({'q': "mimeType != 'application/vnd.google-apps.folder' and trashed=false"}).GetList()
         return [{"title": file["title"], "id": file["id"]} for file in file_list]
@@ -21,45 +23,61 @@ class DriveFileService:
     def get_folders():
         drive = auth_instance.drive
         if not drive:
-            raise Exception("Google Drive authentication is required. Call login_drive() first.")
+            raise Exception("Debe autenticarse con Google Drive.")
 
         folder_list = drive.ListFile({'q': "mimeType = 'application/vnd.google-apps.folder' and trashed=false"}).GetList()
         return [{"title": folder["title"], "id": folder["id"]} for folder in folder_list]
     
+    # Cambia la visibilidad del archivo de público a privado
+    # Envia un correo electrónico al Propietario del archivo, avisando que la visibilidad ha sido cambiada
     @staticmethod
-    def create_file():
-        return ""
+    def modify_file_visibility(file_id: str, visibility: Visibility):
+        drive = auth_instance.drive
+        if not drive:
+            raise Exception("Debe autenticarse con Google Drive.")
         
-    @staticmethod
-    def create_folder():
-        return ""
+        try:
+                file = drive.CreateFile({'id': file_id})
+                file.FetchMetadata()
+                
+                if visibility == Visibility.private:
+                    permissions = file.GetPermissions()
+                    for permission in permissions:
+                        if permission.get('type') == 'anyone':
+                            file.DeletePermission(permission['id'])
+                    message = "La visibilidad del archivo ha sido cambiada a privado."
+                elif visibility == Visibility.public:
+                    file.InsertPermission({
+                        'type': 'anyone',
+                        'value': 'anyone',
+                        'role': 'reader'
+                    })
+                    message = "La visibilidad del archivo ha sido cambiada a público."
+                else:
+                    raise Exception("La visibilidad debe ser 'public' o 'private'.")
+                
+                return message
 
+        except HttpError as error:
+            raise Exception(f"Error al modificar la visibilidad del archivo: {error}")
+    
+    # Sincroniza los archivos de Google Drive con la base de datos
+    # (si un archivo de Drive no existe en la base de datos, se crea un registro)
     @staticmethod
-    def upload_file():
+    def save_files_in_database():
+        drive = auth_instance.drive
+        if not drive:
+            raise Exception("Debe autenticarse con Google Drive.")
+        return ""
+    
+    # Listado histórico de todos los archivos que fueron en algún momento públicos
+    @staticmethod
+    def get_public_file_history():
+        drive = auth_instance.drive
+        if not drive:
+            raise Exception("Debe autenticarse con Google Drive.")
         return ""
     
     @staticmethod
-    def download_file():
-        return ""
-
-    @staticmethod
-    def search_file():
-        return ""
-    
-    @staticmethod
-    def delete_file():
-        return ""
-    
-    @staticmethod
-    def modify_file_visibility():
-        # Cambia la visibilidad del archivo de público a privado
-        # Envia un correo electrónico al Propietario del archivo, avisando que la visibilidad ha sido cambiada.
-        return ""
-    
-    @staticmethod
-    def insert_permissions():
-        return ""
-    
-    @staticmethod
-    def modify_permissions():
+    def send_email():
         return ""

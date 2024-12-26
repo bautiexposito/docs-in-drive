@@ -1,9 +1,10 @@
 from fastapi import APIRouter, HTTPException
 from app.service.drive_file_service import DriveFileService
+from app.controller.validator.drive_file_validator import ModifyVisibilityRequest
 
 router = APIRouter()
 
-@router.post("/login-drive", status_code=200)
+@router.post("/login", status_code=200)
 async def login_drive():
     try:
         drive_instance = DriveFileService.login_drive()
@@ -11,16 +12,23 @@ async def login_drive():
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error al autenticar con Google Drive: {str(e)}")
     
-@router.get("/", status_code=200)
+@router.get("/files", status_code=200)
 async def get_files():
     try:
         return DriveFileService.get_files()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error al obtener archivos de Google Drive: {str(e)}")
     
-@router.get("/", status_code=200)
+@router.get("/folders", status_code=200)
 async def get_folders():
     try:
         return DriveFileService.get_folders()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error al obtener carpetas de Google Drive: {str(e)}")
+
+@router.post("/file/modify_visibility", status_code=200)
+def modify_file_visibility(request: ModifyVisibilityRequest):
+    try:
+        return DriveFileService.modify_file_visibility(request.file_id, request.visibility)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error al modificar la visibilidad del archivo: {str(e)}")
