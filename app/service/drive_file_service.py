@@ -1,3 +1,4 @@
+from app.service.email import send_email
 from app.utils.google_auth import GoogleDriveAuth
 from app.model.local_file import Visibility
 from googleapiclient.errors import HttpError
@@ -39,24 +40,29 @@ class DriveFileService:
         try:
                 file = drive.CreateFile({'id': file_id})
                 file.FetchMetadata()
+
+                file_name = file["title"]
+                owner_email = file["owners"][0]["emailAddress"]
                 
                 if visibility == Visibility.private:
                     permissions = file.GetPermissions()
                     for permission in permissions:
                         if permission.get('type') == 'anyone':
                             file.DeletePermission(permission['id'])
-                    message = "La visibilidad del archivo ha sido cambiada a privado."
+                    visibility_status = "privado"
                 elif visibility == Visibility.public:
                     file.InsertPermission({
                         'type': 'anyone',
                         'value': 'anyone',
                         'role': 'reader'
                     })
-                    message = "La visibilidad del archivo ha sido cambiada a público."
+                    visibility_status = "público"
                 else:
                     raise Exception("La visibilidad debe ser 'public' o 'private'.")
                 
-                return message
+                send_email(owner_email, file_name, visibility_status)
+                
+                return f"La visibilidad del archivo '{file_name}' fue cambiada a {visibility_status}."
 
         except HttpError as error:
             raise Exception(f"Error al modificar la visibilidad del archivo: {error}")
@@ -76,8 +82,4 @@ class DriveFileService:
         drive = auth_instance.drive
         if not drive:
             raise Exception("Debe autenticarse con Google Drive.")
-        return ""
-    
-    @staticmethod
-    def send_email():
         return ""
