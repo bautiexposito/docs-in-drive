@@ -2,3 +2,4 @@ credentials/*
 .env
 .venv
 Challenge.pdf
+__pycache__/

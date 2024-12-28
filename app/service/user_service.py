@@ -21,8 +21,10 @@ class UserService:
 
     @staticmethod
     def update_user(db: Session, user_id: int, user_data: dict):
-        user = User(**user_data)
-        return update_user(db, user_id, user)
+        user = update_user(db, user_id, user_data)
+        if not user:
+            raise ValueError("Usuario no encontrado")
+        return user
 
     @staticmethod
     def delete_user(db: Session, user_id: int):

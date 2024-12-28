@@ -13,10 +13,10 @@ def add_user(db: Session, user: User):
     db.refresh(user)
     return user
 
-def update_user(db: Session, user_id: int, updated_user: User):
+def update_user(db: Session, user_id: int, user_data: dict):
     user = db.query(User).filter(User.id == user_id).first()
     if user:
-        for key, value in updated_user.__dict__.items():
+        for key, value in user_data.items():
             if value is not None:
                 setattr(user, key, value)
         db.commit()

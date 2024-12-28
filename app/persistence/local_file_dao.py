@@ -13,10 +13,10 @@ def add_file(db: Session, local_file: LocalFile):
     db.refresh(local_file)
     return local_file
 
-def update_file(db: Session, file_id: int, updated_file: LocalFile):
+def update_file(db: Session, file_id: int, updated_data: dict):
     file = db.query(LocalFile).filter(LocalFile.id == file_id).first()
     if file:
-        for key, value in updated_file.__dict__.items():
+        for key, value in updated_data.items():
             if value is not None:
                 setattr(file, key, value)
         db.commit()

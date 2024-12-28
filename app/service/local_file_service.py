@@ -20,9 +20,11 @@ class LocalFileService:
         return add_file(db, file)
     
     @staticmethod
-    def update_file(db: Session, file_id: int, local_file_data: LocalFile):
-        file = LocalFile(**local_file_data)
-        return update_file(db, file_id, file)
+    def update_file(db: Session, file_id: int, local_file_data: dict):
+        file = update_file(db, file_id, local_file_data)
+        if not file:
+            return ValueError("Archivo no encontrado")
+        return file
     
     @staticmethod
     def delete_file(db: Session, file_id: int):
