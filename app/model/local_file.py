@@ -1,17 +1,19 @@
-from pydantic import BaseModel, EmailStr
-from datetime import datetime
-from enum import Enum
-from typing import Optional
+from sqlalchemy import Column, Integer, String, Enum, DateTime
+from app.persistence.database import Base
+from datetime import datetime, timezone
+from enum import Enum as PyEnum
 
-class Visibility(str, Enum):
+class Visibility(PyEnum):
     public = "public"
     private = "private"
 
-class LocalFile(BaseModel):
-    id: int
-    id_drive: str
-    name: str
-    extension: str
-    emailOwner: EmailStr
-    visibility: Visibility
-    lastModified: Optional[datetime] = None
+class LocalFile(Base):
+    __tablename__ = "local_files"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    id_drive = Column(String(255), unique=True, nullable=False)
+    name = Column(String(255), nullable=False)
+    extension = Column(String(255), nullable=False)
+    emailOwner = Column(String(255), nullable=False)
+    visibility = Column(Enum(Visibility), nullable=False)
+    lastModified = Column(DateTime, default=datetime.now(timezone.utc))

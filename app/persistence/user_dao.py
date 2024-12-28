@@ -1,42 +1,33 @@
-from typing import List
-from app.model.user import User, Gender
+from sqlalchemy.orm import Session
+from app.model.user import User
 
-db: List[User] = [
-    User(
-        id=0, 
-        first_name="John",
-        last_name="Travolta",
-        email="jhontravolta@hotmail.com",
-        gender=Gender.male,
-    ),
-    User(
-        id=1, 
-        first_name="Alexa",
-        last_name="Ahmed",
-        email="alexaahmed@yahoo.com",
-        gender=Gender.female,
-    )
-]
+def get_all_users(db: Session):
+    return db.query(User).all()
 
-def get_all_users():
-    return db
+def get_user(db: Session, user_id: int):
+    return db.query(User).filter(User.id == user_id).first()
 
-def get_user(user_id: int):
-    return db[user_id]
+def add_user(db: Session, user: User):
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return user
 
-def add_user(user: User):
-    db.append(user)
+def update_user(db: Session, user_id: int, updated_user: User):
+    user = db.query(User).filter(User.id == user_id).first()
+    if user:
+        for key, value in updated_user.__dict__.items():
+            if value is not None:
+                setattr(user, key, value)
+        db.commit()
+        db.refresh(user)
+        return user
+    return None
 
-def update_user(user_id: int, user_data: User):
-    for i, user in enumerate(db):
-        if user.id == user_id:
-            db[i] = user_data
-            return True
-    return False
-
-def delete_user(user_id: int):
-    for user in db:
-        if user.id == user_id:
-            db.remove(user)
-            return True
+def delete_user(db: Session, user_id: int):
+    user = db.query(User).filter(User.id == user_id).first()
+    if user:
+        db.delete(user)
+        db.commit()
+        return True
     return False

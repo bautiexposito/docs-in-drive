@@ -1,44 +1,33 @@
-from typing import List
-from app.model.local_file import LocalFile, Visibility
+from sqlalchemy.orm import Session
+from app.model.local_file import LocalFile
 
-db: List[LocalFile] = [
-    LocalFile(
-        id=0,
-        id_drive="jsd8SDYFHAS9I",
-        name="requerimientos",
-        extension=".txt",
-        emailOwner="bautistaaexpositooo@gmail.com",
-        visibility=Visibility.private,
-    ),
-    LocalFile(
-        id=1,
-        id_drive="JSD8J8dsaf9A1",
-        name="README",
-        extension=".md",
-        emailOwner="bautistaaexpositooo@gmail.com",
-        visibility=Visibility.public,
-    )
-]
+def get_all_files(db: Session):
+    return db.query(LocalFile).all()
 
-def get_all_files():
-    return db
+def get_file(db: Session, file_id: int):
+    return db.query(LocalFile).filter(LocalFile.id == file_id).first()
 
-def get_file(file_id: int):
-    return db[file_id]
+def add_file(db: Session, local_file: LocalFile):
+    db.add(local_file)
+    db.commit()
+    db.refresh(local_file)
+    return local_file
 
-def add_file(driveFile: LocalFile):
-    db.append(driveFile)
+def update_file(db: Session, file_id: int, updated_file: LocalFile):
+    file = db.query(LocalFile).filter(LocalFile.id == file_id).first()
+    if file:
+        for key, value in updated_file.__dict__.items():
+            if value is not None:
+                setattr(file, key, value)
+        db.commit()
+        db.refresh(file)
+        return file
+    return None
 
-def update_file(file_id: int, driveFile: LocalFile):
-    for i, file in enumerate(db):
-        if file.id == file_id:
-            db[i] = driveFile
-            return True
-    return False
-
-def delete_file(file_id: int):
-    for file in db:
-        if file.id == file_id:
-            db.remove(file)
-            return True
+def delete_file(db: Session, file_id: int):
+    file = db.query(LocalFile).filter(LocalFile.id == file_id).first()
+    if file:
+        db.delete(file)
+        db.commit()
+        return True
     return False
