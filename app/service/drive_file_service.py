@@ -7,6 +7,7 @@ from app.model.local_file import LocalFile
 from app.utils.google_auth import GoogleDriveAuth
 from app.model.local_file import Visibility
 from googleapiclient.errors import HttpError
+from sqlalchemy import text
 
 auth_instance = GoogleDriveAuth()
 
@@ -116,8 +117,17 @@ class DriveFileService:
     
     # Listado histórico de todos los archivos que fueron en algún momento públicos
     @staticmethod
-    def get_public_file_history():
+    def get_public_files_history(db: Session):
         drive = auth_instance.drive
         if not drive:
             raise Exception("Debe autenticarse con Google Drive.")
-        return ""
+        
+        try:
+            query = text("""
+                SELECT * 
+                FROM public_files_history
+            """)
+            result = db.execute(query).fetchall()
+            return [dict(row._mapping) for row in result]
+        except Exception as e:
+            raise Exception(f"Error al obtener el historial de archivos públicos: {e}")

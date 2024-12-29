@@ -42,3 +42,10 @@ async def save_files(db: Session = Depends(get_db)):
         return {"message": result}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+@router.get("/files/public/history", status_code=200)
+async def get_public_files_history(db: Session = Depends(get_db)):
+    try:
+        return DriveFileService.get_public_files_history(db)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
