@@ -1,4 +1,6 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
+from sqlalchemy.orm import Session
+from app.persistence.database import get_db
 from app.service.drive_file_service import DriveFileService
 from app.controller.validator.drive_file_validator import ModifyVisibilityRequest
 
@@ -32,3 +34,11 @@ def modify_file_visibility(request: ModifyVisibilityRequest):
         return DriveFileService.modify_file_visibility(request.file_id, request.visibility)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error al modificar la visibilidad del archivo: {str(e)}")
+    
+@router.post("/files/save", status_code=200)
+async def save_files(db: Session = Depends(get_db)):
+    try:
+        result = DriveFileService.save_files_in_database(db)
+        return {"message": result}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

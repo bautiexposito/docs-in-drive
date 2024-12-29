@@ -16,4 +16,4 @@ class LocalFile(Base):
     extension = Column(String(255), nullable=False)
     emailOwner = Column(String(255), nullable=False)
     visibility = Column(Enum(Visibility), nullable=False)
-    lastModified = Column(DateTime, default=datetime.now(timezone.utc))
+    lastModified = Column(DateTime, nullable=False)
