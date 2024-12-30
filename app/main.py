@@ -8,7 +8,6 @@ from app.controller.drive_file_controller import router as driveFile_router
 
 app = FastAPI()
 
-# Registrar rutas
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'app')))
 app.include_router(user_router, prefix="/api/v1/users", tags=["users"])
 app.include_router(localFile_router, prefix="/api/v1/local_files", tags=["localFiles"])

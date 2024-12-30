@@ -1,6 +1,5 @@
 from sqlalchemy import Column, Integer, String, Enum, DateTime
 from app.persistence.database import Base
-from datetime import datetime, timezone
 from enum import Enum as PyEnum
 
 class Visibility(PyEnum):

@@ -3,7 +3,6 @@ from dotenv import load_dotenv
 from email.message import EmailMessage
 import ssl
 import smtplib
-# import certifi
 
 load_dotenv()
 
@@ -24,7 +23,6 @@ def send_email(email_receiver: str, file_name: str, visibility: str):
     em["Subject"] = subject
     em.set_content(body)
 
-    # context = ssl.create_default_context()
     context = ssl._create_unverified_context()
 
     with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as smtp:

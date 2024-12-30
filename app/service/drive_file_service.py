@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from datetime import datetime, timezone
+from datetime import datetime
 from dateutil.parser import isoparse
 from app.service.email import send_email
 from app.persistence.local_file_dao import get_all_files, add_file
@@ -8,6 +8,7 @@ from app.utils.google_auth import GoogleDriveAuth
 from app.model.local_file import Visibility
 from googleapiclient.errors import HttpError
 from sqlalchemy import text
+from sqlalchemy.exc import SQLAlchemyError
 
 auth_instance = GoogleDriveAuth()
 
@@ -35,10 +36,10 @@ class DriveFileService:
         folder_list = drive.ListFile({'q': "mimeType = 'application/vnd.google-apps.folder' and trashed=false"}).GetList()
         return [{"title": folder["title"], "id": folder["id"]} for folder in folder_list]
     
-    # Cambia la visibilidad del archivo de público a privado
-    # Envia un correo electrónico al Propietario del archivo, avisando que la visibilidad ha sido cambiada
+    # Modifica la visibilidad del archivo en Google Drive y el registro en la base de datos
+    # Envia un correo al Propietario del archivo, avisando que la visibilidad fue modificada
     @staticmethod
-    def modify_file_visibility(file_id: str, visibility: Visibility):
+    def modify_file_visibility(file_id: str, visibility: Visibility, db: Session):
         drive = auth_instance.drive
         if not drive:
             raise Exception("Debe autenticarse con Google Drive.")
@@ -50,6 +51,7 @@ class DriveFileService:
                 file_name = file["title"]
                 owner_email = file["owners"][0]["emailAddress"]
                 
+                # Modifica la visibilidad en Google Drive
                 if visibility == Visibility.private:
                     permissions = file.GetPermissions()
                     for permission in permissions:
@@ -66,10 +68,21 @@ class DriveFileService:
                 else:
                     raise Exception("La visibilidad debe ser 'public' o 'private'.")
                 
+                # Actualizar la visibilidad en la base de datos
+                try:
+                    query = db.query(LocalFile).filter_by(id_drive=file_id).first()
+                    if not query:
+                        raise Exception(f"El archivo con ID '{file_id}' no fue encontrado en la base de datos.")
+                    query.visibility = visibility.value
+                    db.commit()
+                except SQLAlchemyError as db_error:
+                    db.rollback()
+                    raise Exception(f"Error al actualizar la base de datos: {db_error}")
+                
+                # Envia un correo al propietario del archivo
                 send_email(owner_email, file_name, visibility_status)
                 
                 return f"La visibilidad del archivo '{file_name}' fue cambiada a {visibility_status}."
-
         except HttpError as error:
             raise Exception(f"Error al modificar la visibilidad del archivo: {error}")
     
