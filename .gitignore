@@ -4,4 +4,3 @@ credentials_module.json
 .venv
 Challenge.pdf
 **/__pycache__/
-settings.yaml

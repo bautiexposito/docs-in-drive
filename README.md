@@ -32,13 +32,14 @@ Bienvenido a la aplicación FastAPI Drive Inventory, una solución desarrollada 
 
 2. **Configurar Variables de Entorno**
 
-Crea un archivo .env en la raíz del proyecto para almacenar las variables de entorno necesarias. 
-Ejemplo:
-   ```sh
-   DATABASE_URL= your_database_url_here
-   EMAIL_PASSWORD= your_email_password_here
-   GOOGLE_CLIENT_ID= your_client_id_here
-   GOOGLE_CLIENT_SECRET= your_secret_key_here
+   Crea un archivo .env en la raíz del proyecto para almacenar las variables de entorno necesarias. 
+
+   Ejemplo:
+      ```sh
+      DATABASE_URL= your_database_url_here
+      EMAIL_PASSWORD= your_email_password_here
+      GOOGLE_CLIENT_ID= your_client_id_here
+      GOOGLE_CLIENT_SECRET= your_secret_key_here
 ```
 
 3. **Obtener Credenciales de Google API**
@@ -61,27 +62,25 @@ Ejemplo:
 5. **Crear un Entorno Virtual**
    
    En Windows:
-   ```sh
-   python -m venv venv
-   venv\Scripts\activate
+      ```sh
+      python -m venv venv
+      venv\Scripts\activate
 ```
 
 6. **Instalar Dependencias**
 
    pip install -r requirements.txt
 
-7. **Configurar el Archivo settings.yaml**
-
-8. **Crear la Base de Datos**
+7. **Crear la Base de Datos**
 
    - Modificar la URL de la variable 'DATABASE_URL' en el archivo .env
    - Ejecutar el script create_tables.py dentro de la carpeta 'persistence'
    - Ejecutar las querys dentro del archivo 'inventario.sql'
 
-9. **Ejecutar la Aplicación**
+8. **Ejecutar la Aplicación**
 
    uvicorn app.main:app --reload
 
-10. **Ejecutar Tests (Opcional)**
+9. **Ejecutar Tests (Opcional)**
 
    pytest
