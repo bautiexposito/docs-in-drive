@@ -25,22 +25,18 @@ Bienvenido a la aplicación FastAPI Drive Inventory, una solución desarrollada 
 
 1. **Clona el repositorio**:
 
-   ```sh
    git clone https://github.com/bautiexposito/docs-in-drive
-   cd docs-in-drive
-```
 
 2. **Configurar Variables de Entorno**
 
    Crea un archivo .env en la raíz del proyecto para almacenar las variables de entorno necesarias. 
 
    Ejemplo:
-      ```sh
+
       DATABASE_URL= your_database_url_here
       EMAIL_PASSWORD= your_email_password_here
       GOOGLE_CLIENT_ID= your_client_id_here
       GOOGLE_CLIENT_SECRET= your_secret_key_here
-```
 
 3. **Obtener Credenciales de Google API**
 
@@ -62,10 +58,8 @@ Bienvenido a la aplicación FastAPI Drive Inventory, una solución desarrollada 
 5. **Crear un Entorno Virtual**
    
    En Windows:
-      ```sh
       python -m venv venv
       venv\Scripts\activate
-```
 
 6. **Instalar Dependencias**
 
