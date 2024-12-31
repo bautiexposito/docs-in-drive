@@ -76,6 +76,13 @@ Bienvenido a la aplicación FastAPI Drive Inventory, una solución desarrollada 
 
    uvicorn app.main:app --reload
 
+9. **Peticiones en Postman**
+
+   - Ingresar a la Documentacion declarada
+   - Primero una peticion post en 'login_drive' para loguearse en Google Drive
+   - Segundo una peticion post en 'save_files' para guardar los archivos de Drive en la base de datos
+   - Luego realizar las peticiones deseadas
+
 9. **Ejecutar Tests (Opcional)**
 
    pytest
