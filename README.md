@@ -29,14 +29,12 @@ Bienvenido a la aplicación FastAPI Drive Inventory, una solución desarrollada 
 
 2. **Configurar Variables de Entorno**
 
-   Crea un archivo .env en la raíz del proyecto para almacenar las variables de entorno necesarias. 
+   Crea un archivo .env en la raíz del proyecto para almacenar las siguientes variables de entorno: 
 
-   Ejemplo:
-
-      DATABASE_URL= your_database_url_here
-      EMAIL_PASSWORD= your_email_password_here
-      GOOGLE_CLIENT_ID= your_client_id_here
-      GOOGLE_CLIENT_SECRET= your_secret_key_here
+   - DATABASE_URL= "mysql+pymysql://usuario:contraseña@localhost:3306/nombrebd"
+   - EMAIL_PASSWORD= "your_email_password_here"
+   - GOOGLE_CLIENT_ID= "your_client_id_here"
+   - GOOGLE_CLIENT_SECRET= "your_secret_key_here"
 
 3. **Obtener Credenciales de Google API**
 
@@ -58,8 +56,9 @@ Bienvenido a la aplicación FastAPI Drive Inventory, una solución desarrollada 
 5. **Crear un Entorno Virtual**
    
    En Windows:
-      python -m venv venv
-      venv\Scripts\activate
+
+   - python -m venv venv
+   - venv\Scripts\activate
 
 6. **Instalar Dependencias**
 
@@ -67,9 +66,11 @@ Bienvenido a la aplicación FastAPI Drive Inventory, una solución desarrollada 
 
 7. **Crear la Base de Datos**
 
+   - Crear un nuevo esquema en MySQL
    - Modificar la URL de la variable 'DATABASE_URL' en el archivo .env
+   - DATABASE_URL= "mysql+pymysql://usuario:contraseña@localhost:3306/nombreDelEsquema"
    - Ejecutar el script create_tables.py dentro de la carpeta 'persistence'
-   - Ejecutar las querys dentro del archivo 'inventario.sql'
+   - Ejecutar las querys del archivo 'inventario.sql' en tu administrador de base de datos (ej: MySQL Workbench)
 
 8. **Ejecutar la Aplicación**
 
